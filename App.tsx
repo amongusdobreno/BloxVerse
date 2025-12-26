@@ -8,7 +8,7 @@ import GamePlay from './components/GamePlay';
 import Marketplace from './components/Marketplace';
 import FriendList from './components/FriendList';
 import { Page, User, Experience, GamePass, SkinItem, Friend } from './types';
-import { INITIAL_EXPERIENCES, SKIN_SHOP_ITEMS, INITIAL_FRIENDS, BovuxIcon } from './constants.tsx';
+import { INITIAL_EXPERIENCES, SKIN_SHOP_ITEMS, INITIAL_FRIENDS } from './constants.tsx';
 
 const App: React.FC = () => {
   const [activePage, setActivePage] = useState<Page>('Home');
@@ -311,27 +311,6 @@ const App: React.FC = () => {
                        </div>
                     </div>
                  </div>
-                 
-                 {selectedExp.gamepasses && selectedExp.gamepasses.length > 0 && (
-                   <div className="space-y-6">
-                     <h4 className="text-[10px] font-black uppercase text-gray-400 tracking-[0.3em]">Gamepasses</h4>
-                     <div className="grid grid-cols-2 gap-4">
-                       {selectedExp.gamepasses.map(gp => (
-                         <div key={gp.id} className="bg-gray-50 p-6 rounded-[35px] flex items-center justify-between border border-gray-200">
-                            <div className="flex items-center gap-6">
-                               <div className="w-16 h-16 bg-white rounded-2xl flex items-center justify-center text-3xl shadow-sm border border-gray-100">{gp.icon}</div>
-                               <div className="flex flex-col">
-                                  <span className="font-black text-xs uppercase text-black">{gp.name}</span>
-                                  <span className="text-[8px] font-bold text-gray-400 uppercase">{gp.description}</span>
-                               </div>
-                            </div>
-                            <button onClick={() => handleBuyItem(gp)} className={`px-8 py-3 rounded-2xl text-[10px] font-black uppercase transition-all ${user.inventory.includes(gp.id) ? 'bg-gray-200 text-gray-400' : 'bg-yellow-500 text-white shadow-xl hover:scale-105'}`}>{user.inventory.includes(gp.id) ? 'Equipped' : gp.price + ' R$'}</button>
-                         </div>
-                       ))}
-                     </div>
-                   </div>
-                 )}
-
                  <button onClick={() => {setPlayingId(selectedExp.id); setActivePage('Playing'); setSelectedExp(null);}} className="w-full bg-green-600 text-white font-black py-12 rounded-[50px] text-5xl uppercase tracking-tighter shadow-2xl hover:bg-green-500 hover:scale-[1.02] transition-all active:scale-95">ENTER SERVER</button>
               </div>
            </div>
