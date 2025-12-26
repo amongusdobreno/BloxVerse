@@ -1,0 +1,8 @@
+{
+  "name": "BloxVerse - Infinite Experiences",
+  "description": "A high-fidelity for discovering, creating, and playing community-driven games",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
