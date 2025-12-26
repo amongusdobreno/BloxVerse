@@ -34,6 +34,24 @@ const App: React.FC = () => {
     return saved ? JSON.parse(saved) : [];
   });
 
+  const getInitialGuest = (): User => ({
+    username: 'Guest',
+    displayName: 'Guest Player',
+    email: '',
+    robux: 1000,
+    role: 'Player',
+    inventory: ['face_smile', 'skin_white', 'shirt_blue'],
+    friends: INITIAL_FRIENDS,
+    avatarConfig: {
+      skinColor: '#FFE0BD',
+      headShape: 'square',
+      face: '😊',
+      shirtColor: '#3b82f6',
+      pantsColor: '#1e293b',
+      accessory: 'none'
+    }
+  });
+
   const [user, setUser] = useState<User>(() => {
     const saved = localStorage.getItem('bloxverse_active_user');
     if (saved) {
@@ -41,23 +59,7 @@ const App: React.FC = () => {
       setShowLogin(false);
       return JSON.parse(saved);
     }
-    return {
-      username: 'Guest',
-      displayName: 'Guest Player',
-      email: '',
-      robux: 1000,
-      role: 'Player',
-      inventory: ['face_smile', 'skin_white', 'shirt_blue'],
-      friends: INITIAL_FRIENDS,
-      avatarConfig: {
-        skinColor: '#FFE0BD',
-        headShape: 'square',
-        face: '😊',
-        shirtColor: '#3b82f6',
-        pantsColor: '#1e293b',
-        accessory: 'none'
-      }
-    };
+    return getInitialGuest();
   });
 
   useEffect(() => {
@@ -73,11 +75,23 @@ const App: React.FC = () => {
     localStorage.setItem('bloxverse_accounts', JSON.stringify(accounts));
   }, [accounts]);
 
+  const handleLogout = () => {
+    localStorage.removeItem('bloxverse_active_user');
+    setUser(getInitialGuest());
+    setIsLogged(false);
+    setShowLogin(true);
+    setActivePage('Home');
+  };
+
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
     
-    const isAdmin = formName === 'BrenoDEV' && formEmail === 'amongusdobreno@gmail.com' && formPass === 'DEVGAME';
-    const exists = accounts.find(a => a.email === formEmail);
+    const emailInput = formEmail.trim();
+    const nameInput = formName.trim();
+    const passInput = formPass.trim();
+
+    const isAdmin = nameInput === 'BrenoDEV' && emailInput === 'amongusdobreno@gmail.com' && passInput === 'DEVGAME';
+    const exists = accounts.find(a => a.email === emailInput);
     
     if (exists) {
       if (isAdmin) {
@@ -93,10 +107,10 @@ const App: React.FC = () => {
       }
     } else {
       const newUser: User = {
-        username: formName.toLowerCase().replace(/\s/g, '_'),
-        displayName: formName || 'Player',
-        email: formEmail,
-        password: formPass,
+        username: nameInput.toLowerCase().replace(/\s/g, '_'),
+        displayName: nameInput || 'Player',
+        email: emailInput,
+        password: passInput,
         role: isAdmin ? 'OVERLORD DEV' : 'Player',
         robux: isAdmin ? 9999999 : 1000,
         inventory: ['face_smile', 'skin_white', 'shirt_blue'],
@@ -229,7 +243,14 @@ const App: React.FC = () => {
 
   return (
     <div className="h-screen flex flex-col overflow-hidden bg-[#F2F4F5]">
-      <Layout user={user} activePage={activePage} setActivePage={setActivePage} onSearch={setSearchQuery} onLoginClick={() => setShowLogin(true)}>
+      <Layout 
+        user={user} 
+        activePage={activePage} 
+        setActivePage={setActivePage} 
+        onSearch={setSearchQuery} 
+        onLoginClick={() => setShowLogin(true)}
+        onLogout={handleLogout}
+      >
         {renderContent()}
       </Layout>
 

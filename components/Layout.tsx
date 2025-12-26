@@ -9,10 +9,11 @@ interface LayoutProps {
   activePage: Page;
   setActivePage: (page: Page) => void;
   onLoginClick: () => void;
+  onLogout: () => void;
   onSearch: (q: string) => void;
 }
 
-const Layout: React.FC<LayoutProps> = ({ children, user, activePage, setActivePage, onLoginClick, onSearch }) => {
+const Layout: React.FC<LayoutProps> = ({ children, user, activePage, setActivePage, onLoginClick, onLogout, onSearch }) => {
   const menuItems: { name: Page; icon: string }[] = [
     { name: 'Home', icon: 'M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6' },
     { name: 'Discover', icon: 'M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z' },
@@ -44,14 +45,17 @@ const Layout: React.FC<LayoutProps> = ({ children, user, activePage, setActivePa
               <div className="text-yellow-600"><BovuxIcon /></div> 
               <span className="font-black text-sm text-black">{user.robux >= 9999999 ? '∞' : user.robux.toLocaleString()}</span>
            </div>
-           <div onClick={onLoginClick} className="flex items-center gap-4 cursor-pointer group">
+           <div className="flex items-center gap-4 group relative">
               <div className="text-right">
                  <div className="text-xs font-black uppercase tracking-tighter leading-none text-black">{user.displayName}</div>
                  <div className="text-[9px] font-bold text-blue-600 uppercase">{user.role}</div>
               </div>
-              <div className="w-10 h-10 rounded-xl bg-gray-900 border-2 border-white shadow-md flex items-center justify-center font-black text-white group-hover:scale-110 transition-all">
+              <div onClick={onLoginClick} className="w-10 h-10 rounded-xl bg-gray-900 border-2 border-white shadow-md flex items-center justify-center font-black text-white cursor-pointer group-hover:scale-110 transition-all">
                 {user.displayName[0].toUpperCase()}
               </div>
+              {user.displayName !== 'Guest Player' && (
+                <button onClick={onLogout} className="absolute -bottom-10 right-0 bg-white text-red-500 font-black text-[8px] uppercase px-4 py-2 rounded-lg shadow-xl opacity-0 group-hover:opacity-100 transition-all border border-red-100">Logout</button>
+              )}
            </div>
         </div>
       </header>
